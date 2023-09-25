@@ -57,7 +57,7 @@ class UnrealSubstanceLibrary:
         unreal.MaterialEditingLibrary.connect_material_property(occulutionRoughnessMetailicParam, "B",
                                                                 unreal.MaterialProperty.MP_METALLIC)
 
-        unreal.EditorAssetLibrary.save_asset(baseMat)
+        unreal.EditorAssetLibrary.save_asset(baseMat.get_path_name())
 
 class UnrealSubstancePluginUI:
     def __init__(self):
