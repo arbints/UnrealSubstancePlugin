@@ -29,6 +29,19 @@ class UnrealSubstanceLibrary:
                                                                 unreal.MaterialProperty.MP_BASE_COLOR)
 
 
+        normalParam = unreal.MaterialEditingLibrary.create_material_expression(material=baseMat,
+                                                                               expression_class=unreal.MaterialExpressionTextureSampleParameter2D,
+                                                                               node_pos_x=-800,
+                                                                               node_pos_y=400,
+                                                                               )
+        normalParam.set_editor_property("parameter_name", "Normal")
+        defaultNormalMap = unreal.EditorAssetLibrary.load_asset('/Engine/EngineMaterials/DefaultNormal')
+        normalParam.set_editor_property("texture", defaultNormalMap)
+        unreal.MaterialEditingLibrary.connect_material_property(normalParam, "RGB", unreal.MaterialProperty.MP_NORMAL)
+
+
+
+
 
 
 class UnrealSubstancePluginUI:
