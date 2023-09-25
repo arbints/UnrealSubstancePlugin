@@ -4,7 +4,7 @@ import unreal
 class BuildSubstanceMaterialScript(unreal.ToolMenuEntryScript):
     @unreal.ufunction(override=True)
     def execute(self, context: unreal.ToolMenuContext) -> None: #execute when click.
-        print("excuting command!!!!")
+        UnrealSubstanceLibrary().BuildBaseMaterial()
 
 
 class UnrealSubstanceLibrary:
@@ -12,6 +12,10 @@ class UnrealSubstanceLibrary:
         self.rootDir = '/game/Substance/'
         self.baseMaterialName = 'Mtl_Substance_Base'
 
+    def BuildBaseMaterial(self):
+        #asset tools is the object we can use to create assets.
+        assetTools = unreal.AssetToolsHelpers.get_asset_tools()
+        baseMat = assetTools.create_asset(self.baseMaterialName, self.rootDir, unreal.Material, unreal.MaterialFactoryNew())
 
 
 class UnrealSubstancePluginUI:
