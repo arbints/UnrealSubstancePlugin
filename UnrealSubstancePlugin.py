@@ -17,6 +17,14 @@ class UnrealSubstanceLibrary:
         assetTools = unreal.AssetToolsHelpers.get_asset_tools()
         baseMat = assetTools.create_asset(self.baseMaterialName, self.rootDir, unreal.Material, unreal.MaterialFactoryNew())
 
+        baseColorParam = unreal.MaterialEditingLibrary.create_material_expression(material=baseMat,
+                                                                                  expression_class=unreal.MaterialExpressionTextureSampleParameter2D,
+                                                                                  node_pos_x=-800,
+                                                                                  node_pos_y=0
+                                                                                  )
+        baseColorParam.set_editor_property("parameter_name", "BaseColor")
+
+
 
 class UnrealSubstancePluginUI:
     def __init__(self):
