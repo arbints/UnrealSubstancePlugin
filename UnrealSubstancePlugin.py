@@ -40,9 +40,24 @@ class UnrealSubstanceLibrary:
         unreal.MaterialEditingLibrary.connect_material_property(normalParam, "RGB", unreal.MaterialProperty.MP_NORMAL)
 
 
+        occulutionRoughnessMetailicParam = unreal.MaterialEditingLibrary.create_material_expression(baseMat,
+                                                                                                    unreal.MaterialExpressionTextureSampleParameter2D,
+                                                                                                    -800,
+                                                                                                    800
+                                                                                                    )
 
+        occulutionRoughnessMetailicParam.set_editor_property("parameter_name", "OcclusionRoughnessMetalic")
 
+        unreal.MaterialEditingLibrary.connect_material_property(occulutionRoughnessMetailicParam, "R",
+                                                                unreal.MaterialProperty.MP_AMBIENT_OCCLUSION)
 
+        unreal.MaterialEditingLibrary.connect_material_property(occulutionRoughnessMetailicParam, "G",
+                                                                unreal.MaterialProperty.MP_ROUGHNESS)
+
+        unreal.MaterialEditingLibrary.connect_material_property(occulutionRoughnessMetailicParam, "B",
+                                                                unreal.MaterialProperty.MP_METALLIC)
+
+        unreal.EditorAssetLibrary.save_asset(baseMat)
 
 class UnrealSubstancePluginUI:
     def __init__(self):
