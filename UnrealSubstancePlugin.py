@@ -24,6 +24,11 @@ class UnrealSubstanceLibrary:
                                                                                   )
         baseColorParam.set_editor_property("parameter_name", "BaseColor")
 
+        unreal.MaterialEditingLibrary.connect_material_property(baseColorParam,
+                                                "RGB",
+                                                                unreal.MaterialProperty.MP_BASE_COLOR)
+
+
 
 
 class UnrealSubstancePluginUI:
