@@ -7,6 +7,13 @@ class BuildSubstanceMaterialScript(unreal.ToolMenuEntryScript):
         print("excuting command!!!!")
 
 
+class UnrealSubstanceLibrary:
+    def __init__(self):
+        self.rootDir = '/game/Substance/'
+        self.baseMaterialName = 'Mtl_Substance_Base'
+
+
+
 class UnrealSubstancePluginUI:
     def __init__(self):
         self.submenuName = "SubstancePlugins"
