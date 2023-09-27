@@ -1,10 +1,23 @@
 import unreal
+import tkinter
+from tkinter import filedialog
 
 @unreal.uclass()
 class BuildSubstanceMaterialScript(unreal.ToolMenuEntryScript):
     @unreal.ufunction(override=True)
     def execute(self, context: unreal.ToolMenuContext) -> None: #execute when click.
         UnrealSubstanceLibrary().BuildBaseMaterial()
+
+@unreal.uclass()
+class ImportFromPathScript(unreal.ToolMenuEntryScript):
+    @unreal.ufunction(override=True)
+    def execute(self, context):
+        window = tkinter.Tk()
+        window.withdraw()
+        path = filedialog.askdirectory()
+        window.destroy()
+
+        print(f"importing from path: {path}")
 
 
 class UnrealSubstanceLibrary:
@@ -73,6 +86,7 @@ class UnrealSubstancePluginUI:
             name=name,
             label=label
         )
+        #registering so the system will update and show it. without it will not apear.
         script.register_menu_entry()
 
     def InitUI(self):
