@@ -19,7 +19,7 @@ class ImportFromPathScript(unreal.ToolMenuEntryScript):
         path = filedialog.askdirectory()
         window.destroy()
 
-        print(f"importing from path: {path}")
+        UnrealSubstanceLibrary().ImportAndBuildFromPath(path)
 
 #where we have real code other than UI
 class UnrealSubstanceLibrary:
@@ -89,10 +89,33 @@ class UnrealSubstanceLibrary:
         unreal.EditorAssetLibrary.save_asset(baseMat.get_path_name())
 
     def LoadMeshFromPath(self, path: str):
-        pass
+        #path = C:/Users/jili1/Downloads/assets/assets/Tiffa.fbx
+        #path.split('/') -> [C:, Users, jili1, Downloads, assets, assets, Tiffa.fbx]
+        # path.split('/')[-1] -> Tiffa.fbx [Tiffa, fbx]
+        meshName = path.split('/')[-1].split('.')[0]
+        print(f"importing: {path}")
+        importTask = unreal.AssetImportTask()
+        importTask.replace_existing = True
+        importTask.filename = path #what we import.
+        importTask.destination_path = '/game/' + meshName #the folder we import the mesh into
+        importTask.save = True
+        importTask.automated = True #we do not want to see the import option pop up.
+
+        fbxImportOptions=unreal.FbxImportUI()
+        fbxImportOptions.import_mesh=True
+        fbxImportOptions.import_as_skeletal=False
+        fbxImportOptions.static_mesh_import_data.combine_meshes=True
+        fbxImportOptions.import_materials=False
+
+        importTask.options = fbxImportOptions #set up the fbx import options to the task
+
+        #ask unreal to do the import task
+        unreal.AssetToolsHelpers().get_asset_tools().import_asset_tasks([importTask])
+
+        return importTask.get_objects()[0]
 
     def LoadTextureFromPath(self, path: str):
-        pass
+        
 
 
 class UnrealSubstancePluginUI:
