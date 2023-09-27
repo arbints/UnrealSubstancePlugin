@@ -63,10 +63,32 @@ class UnrealSubstanceLibrary:
                   f" normal: {normal.get_name()},"
                   f" occlusionRoughnessMetallic:{occlustionRoughnessMetalic.get_name()}")
 
+            #1, create a material instance, with the name "MInst_" + elementName, and path: '/game/'+meshName + '/' + elementName
+            matInst = unreal.AssetToolsHelpers().get_asset_tools().create_asset(
+                asset_name="MInst_" + elemmentName,
+                package_path='/game/'+meshName + '/' + elemmentName,
+                asset_class= unreal.MaterialInstanceConstant,
+                factory=unreal.MaterialInstanceConstantFactoryNew()
+            )
+            #2 retrieve the base material
+            baseMat = self.BuildBaseMaterial()
+
+            #3, set up the parent of the material instance to the base material
+            matInst.set_editor_property("parent", baseMat)
+
+            #4, attach the 3 textures to the material instance
+
+            #5, assign the material
+            mesh.set_material(index, matInst)
 
     def BuildBaseMaterial(self):
         #asset tools is the object we can use to create assets.
         assetTools = unreal.AssetToolsHelpers.get_asset_tools()
+
+        #checks if base material is alreay built, if so, just return it.
+        if unreal.EditorAssetLibrary.does_asset_exist(self.rootDir+self.baseMaterialName):
+            return unreal.EditorAssetLibrary.load_asset(self.rootDir+self.baseMaterialName)
+
         baseMat = assetTools.create_asset(self.baseMaterialName, self.rootDir, unreal.Material, unreal.MaterialFactoryNew())
 
         baseColorParam = unreal.MaterialEditingLibrary.create_material_expression(material=baseMat,
