@@ -103,6 +103,7 @@ class UnrealSubstancePluginUI:
                                         )
         #this adds the button
         self.AddUICommandScript("CreateSubstanceMaterial", "Create Base Substance Material", BuildSubstanceMaterialScript())
+        self.AddUICommandScript("ImportFromFolder", "Import From Folder", ImportFromPathScript())
 
         #needed to show newly added submenu
         toolMenus.refresh_all_widgets()
