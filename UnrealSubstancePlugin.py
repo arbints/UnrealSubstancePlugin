@@ -27,6 +27,8 @@ class UnrealSubstanceLibrary:
         self.rootDir = '/game/Substance/'
         self.baseMaterialName = 'Mtl_Substance_Base'
 
+        #this is a temp folder for textures
+        self.tempFolder = '/game/SubstancePluginTemp/'
 
     def ImportAndBuildFromPath(self, path):
         meshes = []
@@ -115,7 +117,19 @@ class UnrealSubstanceLibrary:
         return importTask.get_objects()[0]
 
     def LoadTextureFromPath(self, path: str):
-        
+        # add code here so all the textures should be imported as well:
+        print(f"importing: {path}")
+        importTask = unreal.AssetImportTask()
+        importTask.replace_existing = True
+        importTask.filename = path  # what we import.
+        importTask.destination_path = self.tempFolder  # the folder we import the mesh into
+        importTask.save = True
+        importTask.automated = True  # we do not want to see the import option pop up.
+
+        #ask unreal to do the import task
+        unreal.AssetToolsHelpers().get_asset_tools().import_asset_tasks([importTask])
+
+        return importTask.get_objects()[0]
 
 
 class UnrealSubstancePluginUI:
