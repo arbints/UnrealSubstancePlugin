@@ -1,3 +1,5 @@
+import os
+
 import unreal
 import tkinter
 from tkinter import filedialog
@@ -19,11 +21,25 @@ class ImportFromPathScript(unreal.ToolMenuEntryScript):
 
         print(f"importing from path: {path}")
 
-
+#where we have real code other than UI
 class UnrealSubstanceLibrary:
     def __init__(self):
         self.rootDir = '/game/Substance/'
         self.baseMaterialName = 'Mtl_Substance_Base'
+
+
+    def ImportAndBuildFromPath(self, path):
+        meshes = []
+        textures = []
+        for file in os.listdir(path):
+            if '.fbx' in file:
+                meshes.append(self.LoadMeshFromPath(path + "/" + file))
+            else:
+                textures.append(self.LoadTextureFromPath(path + "/" + file))
+
+
+
+
 
     def BuildBaseMaterial(self):
         #asset tools is the object we can use to create assets.
@@ -71,6 +87,13 @@ class UnrealSubstanceLibrary:
                                                                 unreal.MaterialProperty.MP_METALLIC)
 
         unreal.EditorAssetLibrary.save_asset(baseMat.get_path_name())
+
+    def LoadMeshFromPath(self, path: str):
+        pass
+
+    def LoadTextureFromPath(self, path: str):
+        pass
+
 
 class UnrealSubstancePluginUI:
     def __init__(self):
