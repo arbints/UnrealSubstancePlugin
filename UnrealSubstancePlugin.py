@@ -39,8 +39,29 @@ class UnrealSubstanceLibrary:
             else:
                 textures.append(self.LoadTextureFromPath(path + "/" + file))
 
+        for mesh in meshes:
+            self.BuildMaterialForMesh(mesh, textures)
 
+    def BuildMaterialForMesh(self, mesh: unreal.StaticMesh, textures: list[unreal.Texture2D]):
+        meshName = mesh.get_name()
+        for index, materialElement in enumerate(mesh.static_materials):
+            elemmentName = unreal.StringLibrary.conv_name_to_string(materialElement.material_slot_name)
+            baseColor = None
+            normal = None
+            occlustionRoughnessMetalic = None
+            for texture in textures:
+                if meshName in texture.get_name() and elemmentName in texture.get_name():
+                    if "BaseColor" in texture.get_name():
+                        baseColor = texture
+                    if "Normal" in texture.get_name():
+                        normal = texture
+                    if "OcclusionRoughnessMetallic" in texture.get_name():
+                        occlustionRoughnessMetalic = texture
 
+            print(f"find material element: {elemmentName} "
+                  f"with base color: {baseColor.get_name()},"
+                  f" normal: {normal.get_name()},"
+                  f" occlusionRoughnessMetallic:{occlustionRoughnessMetalic.get_name()}")
 
 
     def BuildBaseMaterial(self):
