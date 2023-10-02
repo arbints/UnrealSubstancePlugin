@@ -92,6 +92,19 @@ class UnrealSubstanceLibrary:
             #5, assign the material
             mesh.set_material(index, matInst)
 
+            unreal.EditorAssetLibrary.rename_asset(baseColor.get_path_name(),
+                                                   materialFolder + "/" + elemmentName + '/' + baseColor.get_name())
+
+            unreal.EditorAssetLibrary.rename_asset(normal.get_path_name(),
+                                                   materialFolder + "/" + elemmentName + '/' + normal.get_name())
+
+            unreal.EditorAssetLibrary.rename_asset(occlustionRoughnessMetalic.get_path_name(),
+                                                   materialFolder + "/" + elemmentName + '/' + occlustionRoughnessMetalic.get_name())
+
+            unreal.EditorAssetLibrary.save_asset(matInst.get_path_name())
+
+        unreal.EditorAssetLibrary.save_asset(mesh.get_path_name())
+
     def BuildBaseMaterial(self):
         #asset tools is the object we can use to create assets.
         assetTools = unreal.AssetToolsHelpers.get_asset_tools()
