@@ -44,6 +44,9 @@ class UnrealSubstanceLibrary:
 
     def BuildMaterialForMesh(self, mesh: unreal.StaticMesh, textures: list[unreal.Texture2D]):
         meshName = mesh.get_name()
+        meshDir = unreal.Paths.get_path(mesh.get_path_name())
+        materialFolder = meshDir + '/materials'
+
         for index, materialElement in enumerate(mesh.static_materials):
             elemmentName = unreal.StringLibrary.conv_name_to_string(materialElement.material_slot_name)
             baseColor = None
@@ -63,13 +66,15 @@ class UnrealSubstanceLibrary:
                   f" normal: {normal.get_name()},"
                   f" occlusionRoughnessMetallic:{occlustionRoughnessMetalic.get_name()}")
 
+
             #1, create a material instance, with the name "MInst_" + elementName, and path: '/game/'+meshName + '/' + elementName
             matInst = unreal.AssetToolsHelpers().get_asset_tools().create_asset(
                 asset_name="MInst_" + elemmentName,
-                package_path='/game/'+meshName + '/' + elemmentName,
+                package_path=materialFolder + "/" + elemmentName,
                 asset_class= unreal.MaterialInstanceConstant,
                 factory=unreal.MaterialInstanceConstantFactoryNew()
             )
+
             #2 retrieve the base material
             baseMat = self.BuildBaseMaterial()
 
@@ -77,6 +82,9 @@ class UnrealSubstanceLibrary:
             matInst.set_editor_property("parent", baseMat)
 
             #4, attach the 3 textures to the material instance
+            unreal.MaterialEditingLibrary.set_material_instance_texture_parameter_value(matInst, "BaseColor", baseColor)
+            unreal.MaterialEditingLibrary.set_material_instance_texture_parameter_value(matInst, "Normal", normal)
+            unreal.MaterialEditingLibrary.set_material_instance_texture_parameter_value(matInst, "OcclusionRoughnessMetallic", occlustionRoughnessMetalic)
 
             #5, assign the material
             mesh.set_material(index, matInst)
@@ -120,7 +128,7 @@ class UnrealSubstanceLibrary:
                                                                                                     800
                                                                                                     )
 
-        occulutionRoughnessMetailicParam.set_editor_property("parameter_name", "OcclusionRoughnessMetalic")
+        occulutionRoughnessMetailicParam.set_editor_property("parameter_name", "OcclusionRoughnessMetallic")
 
         unreal.MaterialEditingLibrary.connect_material_property(occulutionRoughnessMetailicParam, "R",
                                                                 unreal.MaterialProperty.MP_AMBIENT_OCCLUSION)
@@ -132,6 +140,7 @@ class UnrealSubstanceLibrary:
                                                                 unreal.MaterialProperty.MP_METALLIC)
 
         unreal.EditorAssetLibrary.save_asset(baseMat.get_path_name())
+        return baseMat
 
     def LoadMeshFromPath(self, path: str):
         #path = C:/Users/jili1/Downloads/assets/assets/Tiffa.fbx
