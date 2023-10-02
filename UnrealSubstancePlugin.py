@@ -47,6 +47,9 @@ class UnrealSubstanceLibrary:
         meshDir = unreal.Paths.get_path(mesh.get_path_name())
         materialFolder = meshDir + '/materials'
 
+        if unreal.EditorAssetLibrary.does_directory_exist(materialFolder):
+            unreal.EditorAssetLibrary.delete_directory(materialFolder)
+
         for index, materialElement in enumerate(mesh.static_materials):
             elemmentName = unreal.StringLibrary.conv_name_to_string(materialElement.material_slot_name)
             baseColor = None
