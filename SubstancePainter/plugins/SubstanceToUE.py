@@ -4,6 +4,8 @@ import substance_painter.project
 import substance_painter.textureset
 from PySide2 import QtWidgets
 import pathlib
+import shutil
+import remote_execution
 
 plugin_widgets = []
 
@@ -37,7 +39,7 @@ def export_to_unreal():
             {
                 "parameters":
                 {
-                    "flieFormat" : "tga",
+                    "fileFormat" : "tga",
                     "bitDepth" : "8",
                     "dithering" : True,
                     "paddingAlgorithm" : "infinite"
@@ -46,6 +48,9 @@ def export_to_unreal():
         ]
     }
     export_result = substance_painter.export.export_project_textures(config)
+
+    fbx_file = substance_painter.project.last_imported_mesh_path()
+    shutil.move(fbx_file, export_path)
 
 def start_plugin():
     print("plugin started")
