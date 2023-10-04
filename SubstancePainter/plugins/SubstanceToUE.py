@@ -1,3 +1,5 @@
+import os.path
+
 import substance_painter.ui
 import substance_painter.export
 import substance_painter.project
@@ -47,10 +49,26 @@ def export_to_unreal():
             }
         ]
     }
+    if os.path.exists(export_path): #if the path exists
+        shutil.rmtree(export_path)
     export_result = substance_painter.export.export_project_textures(config)
-
     fbx_file = substance_painter.project.last_imported_mesh_path()
-    shutil.move(fbx_file, export_path)
+    shutil.copy(fbx_file, export_path)
+
+    lib_path = f'{pathlib.Path(__file__).parent.parent.resolve()}\\modules\\UnrealSubstanceLibrary.py'
+
+    lines = []
+    with open(lib_path, 'r') as lib:
+        lines = lib.readlines()
+    read_path = export_path.replace('\\', '/')
+    lines.append(f'\nUnrealSubstanceLibrary().ImportAndBuildFromPath(\'{read_path}\')')
+
+    cmd = ''.join(lines)
+    remote_exc = remote_execution.RemoteExecution()
+    remote_exc.start()
+    remote_exc.open_command_connection(remote_exc.remote_nodes)
+    remote_exc.run_command(cmd)
+    remote_exc.stop()
 
 def start_plugin():
     print("plugin started")
