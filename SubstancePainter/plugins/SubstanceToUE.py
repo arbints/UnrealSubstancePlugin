@@ -63,12 +63,19 @@ def export_to_unreal():
     read_path = export_path.replace('\\', '/')
     lines.append(f'\nUnrealSubstanceLibrary().ImportAndBuildFromPath(\'{read_path}\')')
 
-    cmd = ''.join(lines)
-    remote_exc = remote_execution.RemoteExecution()
-    remote_exc.start()
-    remote_exc.open_command_connection(remote_exc.remote_nodes)
-    remote_exc.run_command(cmd)
-    remote_exc.stop()
+    cmd_path = f'{pathlib.Path(__file__).parent.parent.resolve()}\\modules\\UnrealCmd.py'
+    with open(cmd_path, 'w') as unrealCmd:
+        for line in lines:
+            unrealCmd.write(line)
+
+    try:
+        remote_exc = remote_execution.RemoteExecution()
+        remote_exc.start()
+        remote_exc.open_command_connection(remote_exc.remote_nodes)
+        remote_exc.run_command(cmd_path)
+        remote_exc.stop()
+    except:
+        remote_exc.stop()
 
 def start_plugin():
     print("plugin started")
